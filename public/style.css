@@ -33,3 +33,15 @@ img {
 	margin: 20px auto 0 auto;
 	display: block;
 }
+table{
+  width:50%;
+  margin: auto;
+  text-align: left;
+  border-collapse: collapse;
+}
+th, td{
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 10px;
+  
+}
