@@ -79,7 +79,7 @@ app.get("/:time", function(req , res){
   }else{
     var unixtime = date / 1000;
     
-    res.json({
+   res.json({
       "Unix":unixtime, 
       "Natural": data}) 
     
