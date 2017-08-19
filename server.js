@@ -8,8 +8,6 @@
 var fs = require('fs');
 var express = require('express');
 var app = express();
-var http=require('http');
-
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -40,11 +38,7 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
-// Respond not found to all the wrong routes
-app.use(function(req, res, next){
-  res.status(404);
-  res.type('txt').send('Not found');
-});
+
 
 // Error Middleware
 app.use(function(err, req, res, next) {
@@ -54,11 +48,64 @@ app.use(function(err, req, res, next) {
       .send(err.message || 'SERVER ERROR');
   }  
 })
+////////////Start of my changes
 
-app.get("/:timestamp-ms", function(req , res){
-        res.send;
+//Function to convert unix time to natural
+  function toNatural(a){
+    
+    var date = new Date( a * 1000);
+    
+    var months= ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    var naturalDate = months[date.getMonth()] + " " + date.getDate() +", " + date.getFullYear() ;
+  
+    return naturalDate;
+    
+  }
 
-        });
+
+app.get("/:time", function(req , res){
+    var data = req.params.time; 
+  
+  //convert natural time to unix
+  if(isNaN(data)){
+    
+    var date = new Date (data);
+  if(isNaN(date)){  
+    res.json({
+      "Unix":null, 
+      "Natural": null})
+    
+  }else{
+    var unixtime = date / 1000;
+    
+    res.json({
+      "Unix":unixtime, 
+      "Natural": data}) 
+    
+  }
+    
+    
+  }else{
+    // convert the unix time to natural and assign it to variable.
+    var naturaltime = toNatural(data);
+    
+    res.json({
+      "Unix":data, 
+      "Natural": naturaltime}) 
+  }
+
+
+});
+
+
+//////////End of my changes
+
+// Respond not found to all the wrong routes
+app.use(function(req, res, next){
+  res.status(404);
+  res.type('txt').send('Not found');
+});
 
 app.listen(process.env.PORT, function () {
   console.log('Node.js listening ...');
